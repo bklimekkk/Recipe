@@ -83,7 +83,7 @@ struct PLPMember: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(.ultraThinMaterial)
+                .fill(.gray)
         )
     }
 }

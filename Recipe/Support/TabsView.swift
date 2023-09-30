@@ -25,6 +25,11 @@ struct TabsView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                  }
+            SavedRecipesView()
+                .tabItem {
+                    Image(systemName: "list.star")
+                    Text("Saved Recipes")
+                }
         }
     }
 }

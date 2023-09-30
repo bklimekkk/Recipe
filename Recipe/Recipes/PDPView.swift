@@ -32,6 +32,7 @@ struct PDPView: View {
                             ForEach(mealEquipment, id: \.self) { equipment in
                                 ComponentModifier(content: {
                                     Text(equipment.name)
+                                        .foregroundColor(.white)
                                 }, selected: newMealEquipment.contains(equipment))
                                 .onTapGesture {
                                     if newMealEquipment.contains(equipment) {
@@ -51,15 +52,9 @@ struct PDPView: View {
                 } else {
                     ForEach(mealIngredients, id: \.self) { ingredient in
                         ComponentModifier(content: {
-                            VStack {
-                                Text(ingredient.name)
-                                Divider()
-                                HStack {
-                                    Text(ingredient.amount.metric.value.description)
-                                    Spacer()
-                                    Text(ingredient.amount.metric.unit)
-                                }
-                            }
+                            IngredientInterface(name: ingredient.name,
+                                                quantity: ingredient.amount.metric.value,
+                                                unit: ingredient.amount.metric.unit)
                         }, selected: newMealIngredients.contains(ingredient))
                         .onTapGesture {
                             if newMealIngredients.contains(ingredient) {
@@ -93,8 +88,8 @@ struct PDPView: View {
         }
         .navigationTitle(name)
         .fullScreenCover(isPresented: $showNewPDP, content: {
-            NewPDPView(newMealEquipment: newMealEquipment,
-                       newMealIngredients: newMealIngredients)
+            NewPDPView(newMealEquipment: $newMealEquipment,
+                       newMealIngredients: $newMealIngredients)
         })
     }
 }
