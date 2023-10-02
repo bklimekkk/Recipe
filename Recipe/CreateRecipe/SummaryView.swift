@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SummaryView: View {
     @Binding var recipe: Recipe
+    @Environment(\.managedObjectContext) var moc
+    @State private var saved = false
     var body: some View {
         Form {
             Section {
@@ -55,6 +57,49 @@ struct SummaryView: View {
                     Text("Photos")
                 }
             }
+            Button {
+                saveCustomRecipe()
+                saved = true
+            } label: {
+                if saved {
+                    Text("Saved")
+                } else {
+                    Text("Save recipe")
+                }
+            }
+            .disabled(saved)
+        }
+    }
+    
+    func saveCustomRecipe() {
+        let customRecipe = CustomRecipe(context: moc)
+        customRecipe.name = recipe.name
+        recipe.ingredients.forEach { ingredient in
+            let customIngredient = CustomIngredient(context: moc)
+            customIngredient.name = ingredient.name
+            customIngredient.quantity = Double(ingredient.quantity) ?? 0
+            customIngredient.unit = ingredient.quantityType.rawValue
+            customRecipe.addToIngredients(customIngredient)
+        }
+        recipe.steps.forEach { step in
+            let customStep = CustomStep(context: moc)
+            customStep.name = step.name
+            step.ingredients.forEach { ingredient in
+                let customIngredient = CustomIngredient(context: moc)
+                customIngredient.name = ingredient.name
+                customIngredient.quantity = Double(ingredient.quantity) ?? 0
+                customIngredient.unit = ingredient.quantityType.rawValue
+                customStep.addToIngredients(customIngredient)
+            }
+            customRecipe.addToSteps(customStep)
+        }
+        recipe.photos.forEach { photo in
+            let customPhoto = CustomPhoto(context: moc)
+            customPhoto.image = photo.pngData()
+            customRecipe.addToPhotos(customPhoto)
+        }
+        if moc.hasChanges {
+            try? moc.save()
         }
     }
 }

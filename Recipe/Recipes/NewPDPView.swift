@@ -17,11 +17,25 @@ struct NewPDPView: View {
     
     var body: some View {
         ScrollView(showsIndicators: false) {
-            TextFieldModifier {
-                TextField("Enter new name", text: $newName)
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "arrow.left")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(
+                            Circle()
+                                .fill(.blue)
+                        )
+                }
+                TextFieldModifier {
+                    TextField("Enter new name", text: $newName)
+            }
             }
             if !newMealEquipment.isEmpty {
                 Text("Equipment:")
+                    .bold()
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(newMealEquipment, id: \.self) { equipment in
@@ -34,6 +48,7 @@ struct NewPDPView: View {
                 }
             }
             Text("Ingredients:")
+                .bold()
             ForEach(newMealIngredients, id: \.self) { ingredient in
                 ComponentModifier(content: {
                     IngredientInterface(name: ingredient.name,

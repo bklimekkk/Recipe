@@ -27,7 +27,7 @@ struct SearchView: View {
                 }
                 
                 ForEach(queryResults, id: \.self) { result in
-                    PLPMember(title: result.title)
+                    PLPMember(title: result.title, color: .gray)
                 }
             }
             .padding(5)

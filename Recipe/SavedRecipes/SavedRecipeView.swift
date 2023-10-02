@@ -8,25 +8,59 @@
 import SwiftUI
 
 struct SavedRecipeView: View {
+    @Environment(\.managedObjectContext) var moc
+    @Environment(\.dismiss) var dismiss
     var recipe: NewRecipe
+    var lastElement: Bool {
+        recipe.equipment?.count == 0 && recipe.ingredients?.count == 0
+    }
     var body: some View {
         ScrollView(showsIndicators: false) {
+            if recipe.equipment?.count ?? 0 > 0 {
+                Text("Equipment:")
+                    .bold()
+            }
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(Array(recipe.equipment as? Set<NewEquipment> ?? []), id: \.self) { equipment in
-                        ComponentModifier(content: {
-                            Text(equipment.getName())
-                                .foregroundColor(.white)
-                        }, selected: false)
+                        Menu {
+                            Button("Delete") {
+                                moc.delete(equipment)
+                                if moc.hasChanges {
+                                    try? moc.save()
+                                }
+                                dismiss()
+                            }
+                        } label: {
+                            ComponentModifier(content: {
+                                Text(equipment.getName())
+                                    .foregroundColor(.white)
+                            }, selected: false)
+                        }
                     }
                 }
             }
+            if recipe.ingredients?.count ?? 0 > 0 {
+                Text("Ingredients:")
+                    .bold()
+            }
             ForEach(Array(recipe.ingredients as? Set<NewIngredient> ?? []), id: \.self) { ingredient in
-                ComponentModifier(content: {
-                    IngredientInterface(name: ingredient.getName(),
-                                        quantity: ingredient.quantity,
-                                        unit: ingredient.getUnit())
-                }, selected: false)
+                Menu {
+                    Button("Delete") {
+                        moc.delete(ingredient)
+                        if moc.hasChanges {
+                            try? moc.save()
+                        }
+                        dismiss()
+                    }
+                } label: {
+                    ComponentModifier(content: {
+                        IngredientInterface(name: ingredient.getName(),
+                                            quantity: ingredient.quantity,
+                                            unit: ingredient.getUnit())
+                    }, selected: false)
+                    
+                }
             }
         }
         .padding(.horizontal, 5)

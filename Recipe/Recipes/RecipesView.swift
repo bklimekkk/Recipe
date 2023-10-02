@@ -20,7 +20,7 @@ struct RecipesView: View {
                             NavigationLink {
                                 PDPView(name: recipe.title, id: recipe.id, url: recipe.image)
                             } label: {
-                                PLPMember(title: recipe.title)
+                                PLPMember(title: recipe.title, color: .gray)
                             }
                         }
                     }
@@ -73,6 +73,7 @@ struct RecipesView: View {
 
 struct PLPMember: View {
     var title: String
+    var color: Color
     var body: some View {
         HStack {
             Text(title)
@@ -83,7 +84,7 @@ struct PLPMember: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(.gray)
+                .fill(color)
         )
     }
 }

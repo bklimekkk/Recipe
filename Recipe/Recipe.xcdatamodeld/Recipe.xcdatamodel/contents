@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22222" systemVersion="22G91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CustomIngredient" representedClassName="CustomIngredient" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="quantity" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String"/>
+        <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CustomRecipe" inverseName="ingredients" inverseEntity="CustomRecipe"/>
+        <relationship name="step" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CustomStep" inverseName="ingredients" inverseEntity="CustomStep"/>
+    </entity>
+    <entity name="CustomPhoto" representedClassName="CustomPhoto" syncable="YES">
+        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CustomRecipe" inverseName="photos" inverseEntity="CustomRecipe"/>
+    </entity>
+    <entity name="CustomRecipe" representedClassName="CustomRecipe" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CustomIngredient" inverseName="recipe" inverseEntity="CustomIngredient"/>
+        <relationship name="photos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CustomPhoto" inverseName="recipe" inverseEntity="CustomPhoto"/>
+        <relationship name="steps" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CustomStep" inverseName="recipe" inverseEntity="CustomStep"/>
+    </entity>
+    <entity name="CustomStep" representedClassName="CustomStep" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CustomIngredient" inverseName="step" inverseEntity="CustomIngredient"/>
+        <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CustomRecipe" inverseName="steps" inverseEntity="CustomRecipe"/>
+    </entity>
     <entity name="NewEquipment" representedClassName="NewEquipment" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="newRecipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NewRecipe" inverseName="equipment" inverseEntity="NewRecipe"/>
