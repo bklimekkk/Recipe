@@ -17,11 +17,16 @@ extension NewRecipe {
     }
 
     @NSManaged public var name: String?
+    @NSManaged public var url: String?
     @NSManaged public var equipment: NSSet?
     @NSManaged public var ingredients: NSSet?
 
     func getName() -> String {
         return name ?? ""
+    }
+    
+    func getUrl() -> String {
+        return url ?? ""
     }
 }
 

@@ -17,10 +17,18 @@ extension CustomPhoto {
     }
 
     @NSManaged public var image: Data?
+    @NSManaged public var date: Date?
     @NSManaged public var recipe: CustomRecipe?
 
     func getImage() -> Data {
         return image ?? Data()
+    }
+    
+    func getDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyy-MM-dd HH:mm:ss"
+        let dateString = dateFormatter.string(from: date ?? Date())
+        return dateString
     }
 }
 

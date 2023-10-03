@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchView: View {
     @State private var query = ""
     @State private var queryResults: [Product] = []
+    @State private var isLoading = false
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -18,16 +19,22 @@ struct SearchView: View {
                         TextField("Enter product", text: $query)
                     }
                     Button {
+                        queryResults.removeAll()
+                        isLoading = true
                         Repository.searchProduct(query: query) { results in
                             queryResults = results ?? []
+                            isLoading = false
                         }
                     } label: {
-                        ButtonView(title: "Search")
+                        ButtonView(title: "Search", mainColor: .blue)
                     }
                 }
-                
-                ForEach(queryResults, id: \.self) { result in
-                    PLPMember(title: result.title, color: .gray)
+                if isLoading {
+                        ProgressView()
+                } else {
+                    ForEach(queryResults, id: \.self) { result in
+                        PLPMember(title: result.title, color: .gray)
+                    }
                 }
             }
             .padding(5)

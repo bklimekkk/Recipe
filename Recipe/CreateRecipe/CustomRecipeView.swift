@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct CustomRecipeView: View {
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.managedObjectContext) var moc
     var recipe: CustomRecipe
     var body: some View {
         VStack {
@@ -31,6 +33,46 @@ struct CustomRecipeView: View {
                             .padding(.horizontal, 5)
                     }
                 }
+                if recipe.photos?.count ?? 0 > 0 {
+                    Text("Photos:")
+                        .bold()
+                }
+                LazyVGrid(columns: [GridItem(), GridItem()]) {
+                    ForEach(Array(recipe.photos as? Set<CustomPhoto> ?? []), id: \.self) { photo in
+                        NavigationLink {
+                            Image(uiImage: UIImage(data: photo.image ?? Data()) ?? UIImage())
+                                .resizable()
+                                .scaledToFill()
+                                .navigationTitle(photo.getDate())
+                        } label: {
+                            ZStack {
+                                Image(uiImage: UIImage(data: photo.image ?? Data()) ?? UIImage())
+                                    .resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(10)
+                                
+                                Button {
+                                    recipe.removeFromPhotos(photo)
+                                    if moc.hasChanges {
+                                        try? moc.save()
+                                    }
+                                    dismiss()
+                                } label: {
+                                    VStack {
+                                        HStack {
+                                            Spacer()
+                                            Image(systemName: "xmark")
+                                                .foregroundColor(.white)
+                                        }
+                                        Spacer()
+                                    }
+                                }
+                                .padding()
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, 5)
             }
         }
         .navigationTitle(recipe.getName())

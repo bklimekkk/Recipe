@@ -16,6 +16,8 @@ struct SavedRecipeView: View {
     }
     var body: some View {
         ScrollView(showsIndicators: false) {
+            AsyncImage(url: URL(string: recipe.getUrl()))
+                .cornerRadius(10)
             if recipe.equipment?.count ?? 0 > 0 {
                 Text("Equipment:")
                     .bold()

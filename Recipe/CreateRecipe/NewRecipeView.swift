@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NewRecipeView: View {
+    @FetchRequest(sortDescriptors: []) var recipes: FetchedResults<CustomRecipe>
     @Binding var addNewRecipe: Bool
     @State private var recipe = Recipe()
     var body: some View {
@@ -20,12 +21,27 @@ struct NewRecipeView: View {
                     }
                     Spacer()
                 }
+                Text("Existing names:")
+                ScrollView(showsIndicators: false) {
+                    LazyVGrid(columns: [GridItem(), GridItem()]) {
+                        ForEach(recipes, id: \.self) { recipe in
+                            HalfScreenComponent {
+                                HStack {
+                                    Spacer()
+                                    Text(recipe.getName())
+                                    Spacer()
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, 5)
                 Spacer()
-                if !recipe.name.isEmpty {
+                if !recipe.name.isEmpty && !recipes.map({ $0.name }).contains(recipe.name) {
                     NavigationLink {
                         IngredientsView(recipe: $recipe)
                     } label: {
-                        ButtonView(title: "Ingredients")
+                        ButtonView(title: "Ingredients", mainColor: .blue)
                             .padding(.bottom)
                     }
                 }
@@ -63,7 +79,7 @@ struct TextFieldModifier<Content:View>: View {
 struct ComponentModifier<Content: View>: View {
     var content: () -> Content
     var selected: Bool
-     
+    
     init(@ViewBuilder content: @escaping() -> Content, selected: Bool) {
         self.content = content
         self.selected = selected
@@ -81,8 +97,27 @@ struct ComponentModifier<Content: View>: View {
     }
 }
 
+struct HalfScreenComponent<Content: View>: View {
+    var content: () -> Content
+    
+    init(@ViewBuilder content: @escaping() -> Content) {
+        self.content = content
+    }
+    
+    var body: some View {
+        content()
+        .foregroundColor(.white)
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(.blue)
+        )
+    }
+}
+
 struct ButtonView: View {
     var title: String
+    var mainColor: Color
     var duplicate = false
     var body: some View {
         Text(title)
@@ -90,7 +125,7 @@ struct ButtonView: View {
             .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
             .background(
                 RoundedRectangle(cornerRadius: 30)
-                    .fill(duplicate ? .gray : .green)
+                    .fill(duplicate ? .gray : mainColor)
             )
     }
 }

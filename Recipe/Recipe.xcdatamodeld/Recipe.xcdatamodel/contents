@@ -8,6 +8,7 @@
         <relationship name="step" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CustomStep" inverseName="ingredients" inverseEntity="CustomStep"/>
     </entity>
     <entity name="CustomPhoto" representedClassName="CustomPhoto" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="image" optional="YES" attributeType="Binary"/>
         <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CustomRecipe" inverseName="photos" inverseEntity="CustomRecipe"/>
     </entity>
@@ -34,6 +35,7 @@
     </entity>
     <entity name="NewRecipe" representedClassName="NewRecipe" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
         <relationship name="equipment" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewEquipment" inverseName="newRecipe" inverseEntity="NewEquipment"/>
         <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewIngredient" inverseName="newRecipe" inverseEntity="NewIngredient"/>
     </entity>

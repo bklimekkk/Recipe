@@ -51,7 +51,7 @@ struct AddStepView: View {
                     recipe.steps.append(step)
                     dismiss()
                 } label: {
-                    ButtonView(title: "Add Step", duplicate: duplicateStep)
+                    ButtonView(title: "Add Step", mainColor: .blue, duplicate: duplicateStep)
                 }
                 .disabled(duplicateStep)
             }

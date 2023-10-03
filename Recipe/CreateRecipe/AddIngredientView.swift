@@ -25,22 +25,42 @@ struct AddIngredientView: View {
                 TextField("Enter quantity", text: $ingredient.quantity)
                     .keyboardType(.decimalPad)
             }
-            Menu(ingredient.quantityType.rawValue) {
-                Button("Table Spoons") {
-                    ingredient.quantityType = .tableSpoons
+            HStack {
+                Text("Unit:")
+                Spacer()
+                Menu(ingredient.quantityType.rawValue) {
+                    Button("Table Spoons") {
+                        ingredient.quantityType = .tableSpoons
+                    }
+                    Button("Little Spoons") {
+                        ingredient.quantityType = .littleSpoons
+                    }
+                    Button("Glasses") {
+                        ingredient.quantityType = .glasses
+                    }
+                    Button("Pieces") {
+                        ingredient.quantityType = .pieces
+                    }
                 }
-                Button("Little Spoons") {
-                    ingredient.quantityType = .littleSpoons
-                }
-                Button("Glasses") {
-                    ingredient.quantityType = .glasses
-                }
-                Button("Pieces") {
-                    ingredient.quantityType = .pieces
+            }
+            if !recipe.ingredients.isEmpty {
+                Text("Existing Ingredients:")
+            }
+            ScrollView(showsIndicators: false) {
+                LazyVGrid(columns: [GridItem(), GridItem()]) {
+                    ForEach(recipe.ingredients, id: \.self) { ingredient in
+                        HalfScreenComponent {
+                            HStack {
+                                Spacer()
+                                Text(ingredient.name)
+                                Spacer()
+                            }
+                        }
+                    }
                 }
             }
             Spacer()
-            if !ingredient.name.isEmpty && !ingredient.quantity.isEmpty {
+            if !ingredient.name.isEmpty && !ingredient.quantity.isEmpty && !recipe.ingredients.map({$0.name}).contains(ingredient.name) {
                 Button {
                     recipe.ingredients.append(ingredient)
                     dismiss()

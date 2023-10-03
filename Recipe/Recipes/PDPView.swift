@@ -72,7 +72,7 @@ struct PDPView: View {
                     Button {
                         showNewPDP = true
                     } label: {
-                        ButtonView(title: "Create recipe")
+                        ButtonView(title: "Create recipe", mainColor: .green)
                     }
                 }
                 .padding()
@@ -88,7 +88,7 @@ struct PDPView: View {
         }
         .navigationTitle(name)
         .fullScreenCover(isPresented: $showNewPDP, content: {
-            NewPDPView(newMealEquipment: $newMealEquipment,
+            NewPDPView(url: url, newMealEquipment: $newMealEquipment,
                        newMealIngredients: $newMealIngredients)
         })
     }

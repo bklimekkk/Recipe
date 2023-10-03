@@ -14,17 +14,34 @@ struct PhotosView: View {
     var body: some View {
         VStack {
             if recipe.photos.isEmpty {
+                Spacer()
                 Text("No photos")
                     .bold()
                     .font(.system(size: 40))
+                Spacer()
             } else {
                 ScrollView(showsIndicators: false) {
                     LazyVGrid(columns: [GridItem(), GridItem()]) {
                         ForEach(recipe.photos, id: \.self) { photo in
-                            Image(uiImage: photo)
-                                .resizable()
-                                .scaledToFit()
-                                .cornerRadius(10)
+                            ZStack {
+                                Image(uiImage: photo)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(10)
+                                Button {
+                                    recipe.photos.removeAll(where: {$0 == photo})
+                                } label: {
+                                    VStack {
+                                        HStack {
+                                            Spacer()
+                                            Image(systemName: "xmark")
+                                                .foregroundColor(.white)
+                                        }
+                                        Spacer()
+                                    }
+                                }
+                                .padding()
+                            }
                         }
                     }
                 }
@@ -32,7 +49,7 @@ struct PhotosView: View {
             NavigationLink {
                 SummaryView(recipe: $recipe)
             } label: {
-                ButtonView(title: "Summary")
+                ButtonView(title: "Summary", mainColor: .blue)
             }
         }
         .padding(.horizontal, 5)

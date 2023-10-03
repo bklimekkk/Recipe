@@ -96,6 +96,7 @@ struct SummaryView: View {
         recipe.photos.forEach { photo in
             let customPhoto = CustomPhoto(context: moc)
             customPhoto.image = photo.pngData()
+            customPhoto.date = Date.now
             customRecipe.addToPhotos(customPhoto)
         }
         if moc.hasChanges {

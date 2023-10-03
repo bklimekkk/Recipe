@@ -34,7 +34,7 @@ struct IngredientsView: View {
                 NavigationLink {
                     StepsView(recipe: $recipe)
                 } label: {
-                    ButtonView(title: "Steps")
+                    ButtonView(title: "Steps", mainColor: .blue)
                         .padding(.bottom)
                 }
             }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NewPDPView: View {
+    var url: String
     @Binding var newMealEquipment: [Equipment]
     @Binding var newMealIngredients: [APIIngredient]
     @State private var newName = ""
@@ -33,6 +34,8 @@ struct NewPDPView: View {
                     TextField("Enter new name", text: $newName)
             }
             }
+            AsyncImage(url: URL(string: url))
+                .cornerRadius(10)
             if !newMealEquipment.isEmpty {
                 Text("Equipment:")
                     .bold()
@@ -56,32 +59,41 @@ struct NewPDPView: View {
                                         unit: ingredient.amount.metric.unit)
                 }, selected: false)
             }
-            if !newName.isEmpty {
                 Button {
-                    let recipe = NewRecipe(context: moc)
-                    recipe.name = newName
-                    newMealEquipment.forEach { equipment in
-                        let newEquipment = NewEquipment(context: moc)
-                        newEquipment.name = equipment.name
-                        recipe.addToEquipment(newEquipment)
-                    }
-                    newMealIngredients.forEach { ingredient in
-                        let newIngredient = NewIngredient(context: moc)
-                        newIngredient.name = ingredient.name
-                        newIngredient.quantity = ingredient.amount.metric.value
-                        newIngredient.unit = ingredient.amount.metric.unit
-                        recipe.addToIngredients(newIngredient)
-                    }
-                    if moc.hasChanges {
-                        try? moc.save()
-                    }
-                    newMealEquipment.removeAll()
-                    newMealIngredients.removeAll()
-                    dismiss()
+                 createNewRecipe()
                 } label: {
-                    ButtonView(title: "Save recipe")
+                    if newName.isEmpty {
+                        ButtonView(title: "Recipe name is missing", mainColor: .red)
+                    } else {
+                        ButtonView(title: "Save recipe", mainColor: .green)
+                    }
+                    
                 }
-            }
+                .disabled(newName.isEmpty)
         }
+    }
+    
+    func createNewRecipe() {
+        let recipe = NewRecipe(context: moc)
+        recipe.name = newName
+        recipe.url = url
+        newMealEquipment.forEach { equipment in
+            let newEquipment = NewEquipment(context: moc)
+            newEquipment.name = equipment.name
+            recipe.addToEquipment(newEquipment)
+        }
+        newMealIngredients.forEach { ingredient in
+            let newIngredient = NewIngredient(context: moc)
+            newIngredient.name = ingredient.name
+            newIngredient.quantity = ingredient.amount.metric.value
+            newIngredient.unit = ingredient.amount.metric.unit
+            recipe.addToIngredients(newIngredient)
+        }
+        if moc.hasChanges {
+            try? moc.save()
+        }
+        newMealEquipment.removeAll()
+        newMealIngredients.removeAll()
+        dismiss()
     }
 }
